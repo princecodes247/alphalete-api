@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 //verify if the user is who he claims to be
 const verifyToken = (req, res, next) => {
@@ -30,8 +31,10 @@ const verifyTokenAuthorization = (req, res, next) => {
 
 //verify if it is an admin;
 const verifyTokenAdmin = (req, res, next) => {
-  verifyToken(req, res, () => {
-    if (req.user.isAdmin) {
+  verifyToken(req, res, async () => {
+    const user = await User.findById(req.userId);
+    req.user = user;
+    if (req?.user?.isAdmin) {
       next();
     } else {
       res.status(403).json("You are not allowed to perform such action");
