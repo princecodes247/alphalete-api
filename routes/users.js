@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const Order = require("../models/Order");
+const Product = require("../models/Product");
 const {
   verifyToken,
   verifyTokenAuthorization,
@@ -41,24 +43,45 @@ router.delete("/:id", verifyTokenAdmin, async (req, res) => {
   }
 });
 
-//get user
-router.get("/:id", verifyTokenAdmin, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    const { password, ...others } = user._doc;
-    res.status(200).json(others);
-  } catch (err) {
-    res.status(500).json(err);
-    console.log(err);
-  }
-});
-
 //get all users;
 router.get("/", verifyTokenAdmin, async (req, res) => {
   try {
     const users = await User.find({}, ["fname", "lname", "email", "phone"]);
 
     res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
+router.get("/stats", verifyTokenAdmin, async (req, res) => {
+  try {
+    // return count of all users, products, orders in a single object
+
+    // Count all non-admin users
+    const users = await User.countDocuments({ isAdmin: false });
+    const products = await Product.countDocuments();
+    const orders = await Order.countDocuments();
+    const data = {
+      users,
+      products,
+      orders,
+    };
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
+//get user
+router.get("/:id", verifyTokenAdmin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
   } catch (err) {
     res.status(500).json(err);
     console.log(err);
