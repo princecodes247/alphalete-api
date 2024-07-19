@@ -1,8 +1,7 @@
 const upload = require("../multer");
 
 async function addPathToBody(req, res, next) {
-  // console.log(req.files);
-  // console.log(req.file);
+
   if (req.files) {
     req.body["files"] = req.files.map((file) => file);
   }

@@ -23,7 +23,7 @@ router.post("/", verifyToken, async (req, res) => {
   };
   const newAddress = new Address(data);
   try {
-    const existingAddress = await Address.findOne({
+    let existingAddress = await Address.findOne({
       userId: newAddress.userId,
     });
     if (existingAddress === null) {

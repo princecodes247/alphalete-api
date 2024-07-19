@@ -10,7 +10,6 @@ const AddressSchema = new mongoose.Schema(
     addressOne: { type: String, required: true },
     addressTwo: { type: String, required: true },
     city: { type: String, required: true },
-    country: { type: String, required: true },
     province: { type: String, required: true },
     postalcode: { type: String, required: true },
     phone: { type: String, required: true },
